@@ -5,6 +5,7 @@
  */
 package implementationhs;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class ImplementationHS {
         int [] histogram = new int [256];
         for (int y = 0; y < dimensifoto.length; y++) {
             for (int x = 0; x < dimensifoto[y].length; x++) {
-                int tmp = (dimensifoto [y] [x] >> 16)& 0xFF;
+                int tmp = (dimensifoto [y] [x] >> 16)& 0xFF; //menggunakan warna merah
                 histogram[tmp]++;
             }
         }
@@ -81,6 +82,88 @@ public class ImplementationHS {
         }
         System.out.println("Peak point : "+peak +"Value :"+peakValue);
         System.out.println("Zero point : "+ zero + "Value :"+zeroValue);
+        
+        // kondisi dimana peak point berada di kiri zero point
+        if (peak < zero) {
+            for (int y = 0; y < dimensifoto.length; y++) {
+                for (int x = 0; x < dimensifoto[y].length ; x++) {
+                    int tmp = (dimensifoto [y] [x] >> 16)& 0xFF;
+                    if (tmp == zero) {
+                        pwd +="0";
+                    }
+                    else if (tmp == (zero -1)) {
+                        pwd +="1";
+                    }
+                    if (tmp > peak && tmp < zero) {
+                        // digeser kekanan 1 kali
+                        Color pixel = new Color(tmp +1,(dimensifoto[y] [x] >> 8)& 0xFF, (dimensifoto[y][x])& 0xFF, (dimensifoto[y][x] >> 24)& 0xFF);
+                        dimensifoto[y][x] = pixel.getRGB();
+                    }
+                }
+            }
+//            embed secret message
+            int index =0;
+            for (int y = 0; y < dimensifoto.length; y++) {
+                for (int x = 0; x < dimensifoto[y].length; x++) {
+                    int tmp = (dimensifoto[y][x]>>16)& 0xFF;
+                    if (tmp == peak && index< pwd.length()) {
+                        tmp += Integer.parseInt(pwd.substring(index, index+1),2);
+                        index ++;
+                        Color pixel = new Color(tmp,(dimensifoto[y] [x] >> 8)& 0xFF, (dimensifoto[y][x])& 0xFF, (dimensifoto[y][x] >> 24)& 0xFF);
+                        dimensifoto[y][x] = pixel.getRGB();
+                    }
+                }
+            }
+            
+//            kondisi dimana peak point berada dikanan zero point
+        }else if (peak > zero) {
+            for (int y = 0; y < dimensifoto.length; y++) {
+                for (int x = 0; x < dimensifoto[y].length ; x++) {
+                    int tmp = (dimensifoto [y] [x] >> 16)& 0xFF;
+                    if (tmp == zero) {
+                        pwd +="0";
+                    }
+                    else if (tmp == (zero +1)) {
+                        pwd +="1";
+                    }
+                    if (tmp < peak && tmp > zero) {
+                        // digeser ke kiri 1 kali
+                        Color pixel = new Color(tmp -1,(dimensifoto[y] [x] >> 8)& 0xFF, (dimensifoto[y][x])& 0xFF, (dimensifoto[y][x] >> 24)& 0xFF);
+                        dimensifoto[y][x]= pixel.getRGB();
+                    }
+                }
+            }
+            //            embed secret message
+            int index =0;
+            for (int y = 0; y < dimensifoto.length; y++) {
+                for (int x = 0; x < dimensifoto[y].length; x++) {
+                    int tmp = (dimensifoto[y][x]>>16)& 0xFF;
+                    if (tmp == peak && index< pwd.length()) {
+                        tmp -= Integer.parseInt(pwd.substring(index, index+1),2);
+                        index ++;
+                        Color pixel = new Color(tmp,(dimensifoto[y] [x] >> 8)& 0xFF, (dimensifoto[y][x])& 0xFF, (dimensifoto[y][x] >> 24)& 0xFF);
+                        dimensifoto[y][x] = pixel.getRGB();
+                    }
+                }
+            }
+            
+//            kondisi dimana peak point sama dengan zero point
+        }else{
+            System.out.println("Foto tidak dapat digunakan");
+            System.exit(0);
+        }
+        histogram = new int [256];
+        for (int y = 0; y < dimensifoto.length; y++) {
+            for (int x = 0; x < dimensifoto[y].length; x++) {
+                int tmp = (dimensifoto [y] [x] >> 16)& 0xFF; //menggunakan warna merah
+                histogram[tmp]++;
+            }
+        }
+        System.out.print("Histogram : ");
+        for (int i = 0; i <histogram.length; i++) {
+            System.out.print(histogram[i]+" ");
+        }
+        System.out.println("");
     }
     
 }
