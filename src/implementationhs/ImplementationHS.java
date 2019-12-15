@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import sun.rmi.runtime.Log;
@@ -45,7 +46,7 @@ public class ImplementationHS {
         
         
         //merubah pesan menjadi binary
-        String message = "hesoyam";
+        String message = "haitayo";
         char[] messageChar = message.toCharArray();
         String pwd = "";
         for (int i = 0; i < messageChar.length; i++) {
@@ -101,7 +102,7 @@ public class ImplementationHS {
                     }
                 }
             }
-//            embed secret message
+//            menyisipkan secret message
             int index =0;
             for (int y = 0; y < dimensifoto.length; y++) {
                 for (int x = 0; x < dimensifoto[y].length; x++) {
@@ -133,7 +134,7 @@ public class ImplementationHS {
                     }
                 }
             }
-            //            embed secret message
+            //            menyisipkan secret message
             int index =0;
             for (int y = 0; y < dimensifoto.length; y++) {
                 for (int x = 0; x < dimensifoto[y].length; x++) {
@@ -164,6 +165,19 @@ public class ImplementationHS {
             System.out.print(histogram[i]+" ");
         }
         System.out.println("");
+        // menyimpan gambar berupa foto di storage
+            //membuat foto kosong
+        img = new BufferedImage(dimensifoto[0].length, dimensifoto.length, BufferedImage.TYPE_4BYTE_ABGR);
+        for (int y = 0; y < dimensifoto.length; y++) {
+            for (int x = 0; x < dimensifoto[y].length; x++) {
+                img.setRGB(x, y, dimensifoto[y][x]);
+            }
+        }
+        try {
+            ImageIO.write(img, "jpg", new File("D:\\embedsecret.jpg"));
+        } catch (IOException ex) {
+            Logger.getLogger(ImplementationHS.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
