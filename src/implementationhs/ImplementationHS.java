@@ -174,7 +174,7 @@ public class ImplementationHS {
             }
         }
         try {
-            ImageIO.write(img, "jpg", new File("D:\\embedsecret.jpg"));
+            ImageIO.write(img, "png", new File("D:\\embedsecret.png"));
         } catch (IOException ex) {
             Logger.getLogger(ImplementationHS.class.getName()).log(Level.SEVERE, null, ex);
         }
